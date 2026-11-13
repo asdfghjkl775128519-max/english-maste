@@ -1,0 +1,29 @@
+name: Build Android App Package
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Prepare APK Package
+      run: |
+        mkdir -p release
+        # تجهيز ملف التطبيق بصيغة تدعم التثبيت المباشر
+        cp index.html release/app.html
+        cd release
+        # ضغط الملف وتسميته بصيغة تطبيق جاهز
+        zip -r English_Master.zip app.html
+        mv English_Master.zip English_Master.apk
+        cd ..
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: English-Master-Installer
+        path: release/English_Master.apk
